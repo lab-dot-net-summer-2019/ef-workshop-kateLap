@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SamuraiApp.Data;
 
 namespace SamuraiApp.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20190724170109_UpdateTables")]
+    partial class UpdateTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,21 +57,13 @@ namespace SamuraiApp.Data.Migrations
 
             modelBuilder.Entity("SamuraiApp.Domain.Samurai", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("Id");
 
                     b.Property<string>("Name");
-
-                    b.Property<int?>("SecretIdentityId");
 
                     b.Property<int>("TeacherId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SecretIdentityId")
-                        .IsUnique()
-                        .HasFilter("[SecretIdentityId] IS NOT NULL");
 
                     b.HasIndex("TeacherId");
 
@@ -127,7 +121,8 @@ namespace SamuraiApp.Data.Migrations
                 {
                     b.HasOne("SamuraiApp.Domain.SecretIdentity", "SecretIdentity")
                         .WithOne("Samurai")
-                        .HasForeignKey("SamuraiApp.Domain.Samurai", "SecretIdentityId");
+                        .HasForeignKey("SamuraiApp.Domain.Samurai", "Id")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SamuraiApp.Domain.Teacher", "Teacher")
                         .WithMany("Samurais")

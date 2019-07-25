@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SamuraiApp.Data;
 using SamuraiApp.Domain;
@@ -36,6 +33,11 @@ namespace WebApp.Controllers
             //TODO
             //Get single Samurai, including quotes and SecretIdentity with id = id (query param)
 
+            Samurai samurai = _context.Samurais
+                .Include(s => s.Quotes)
+                .Include(s => s.SecretIdentity)
+                .SingleOrDefault(s => s.Id == id);
+
             if (samurai == null)
             {
                 return NotFound();
@@ -60,6 +62,13 @@ namespace WebApp.Controllers
             {
                 //TODO
                 //Add samurai
+
+                samurai.Teacher = _context.Teachers.First();
+                samurai.SecretIdentity = _context.SecretIdentities.First();
+
+                _context.Samurais.Add(samurai);
+                _context.SaveChanges();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(samurai);
@@ -76,15 +85,22 @@ namespace WebApp.Controllers
             //TODO
             //Get single Samurai with quotes and SecretIdentity with id = id (query param)
 
-            if (samurai == null) {
+            Samurai samurai = _context.Samurais
+                .Include(s => s.Quotes)
+                .Include(s => s.SecretIdentity)
+                .Include(e => e.Teacher)
+                .SingleOrDefault(s => s.Id == id);
+
+            if (samurai == null)
+            {
                 return NotFound();
             }
+
             return View(samurai);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //    public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Samurai samurai)
         public async Task<IActionResult> Edit(int id, Samurai samurai)
         {
             if (id != samurai.Id)
@@ -92,12 +108,15 @@ namespace WebApp.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
             {
                 try
                 {
                     //TODO
-                    //Update samurai 
+                    //Update samurai
+                     
+                    _context.Samurais.Update(samurai);
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -125,8 +144,11 @@ namespace WebApp.Controllers
 
             //TODO
             //Get single Samurai with id = id (query param)
+            // 
+            Samurai samurai = _context.Samurais.SingleOrDefault(s => s.Id == id);
 
-            if (samurai == null) {
+            if (samurai == null)
+            {
                 return NotFound();
             }
 
@@ -141,6 +163,16 @@ namespace WebApp.Controllers
             //TODO
             //Get single Samurai with id = id (query param)
             //and remove
+
+            Samurai samurai = _context.Samurais.SingleOrDefault(s => s.Id == id);
+
+            if (samurai == null)
+            {
+                return NotFound();
+            }
+
+            _context.Remove(samurai);
+            _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }

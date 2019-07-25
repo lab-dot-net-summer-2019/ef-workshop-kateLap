@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SamuraiApp.Data;
 
 namespace SamuraiApp.Data.Migrations
 {
     [DbContext(typeof(SamuraiContext))]
-    partial class SamuraiContextModelSnapshot : ModelSnapshot
+    [Migration("20190722202939_AddTeacherMigration")]
+    partial class AddTeacherMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,15 +63,9 @@ namespace SamuraiApp.Data.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<int?>("SecretIdentityId");
-
-                    b.Property<int>("TeacherId");
+                    b.Property<int?>("TeacherId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SecretIdentityId")
-                        .IsUnique()
-                        .HasFilter("[SecretIdentityId] IS NOT NULL");
 
                     b.HasIndex("TeacherId");
 
@@ -97,9 +93,14 @@ namespace SamuraiApp.Data.Migrations
 
                     b.Property<string>("RealName");
 
+                    b.Property<int>("SamuraiId");
+
                     b.HasKey("Id");
 
-                    b.ToTable("SecretIdentities");
+                    b.HasIndex("SamuraiId")
+                        .IsUnique();
+
+                    b.ToTable("SecretIdentity");
                 });
 
             modelBuilder.Entity("SamuraiApp.Domain.Teacher", b =>
@@ -125,14 +126,9 @@ namespace SamuraiApp.Data.Migrations
 
             modelBuilder.Entity("SamuraiApp.Domain.Samurai", b =>
                 {
-                    b.HasOne("SamuraiApp.Domain.SecretIdentity", "SecretIdentity")
-                        .WithOne("Samurai")
-                        .HasForeignKey("SamuraiApp.Domain.Samurai", "SecretIdentityId");
-
                     b.HasOne("SamuraiApp.Domain.Teacher", "Teacher")
                         .WithMany("Samurais")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TeacherId");
                 });
 
             modelBuilder.Entity("SamuraiApp.Domain.SamuraiBattle", b =>
@@ -145,6 +141,14 @@ namespace SamuraiApp.Data.Migrations
                     b.HasOne("SamuraiApp.Domain.Samurai", "Samurai")
                         .WithMany("SamuraiBattles")
                         .HasForeignKey("SamuraiId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("SamuraiApp.Domain.SecretIdentity", b =>
+                {
+                    b.HasOne("SamuraiApp.Domain.Samurai")
+                        .WithOne("SecretIdentity")
+                        .HasForeignKey("SamuraiApp.Domain.SecretIdentity", "SamuraiId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

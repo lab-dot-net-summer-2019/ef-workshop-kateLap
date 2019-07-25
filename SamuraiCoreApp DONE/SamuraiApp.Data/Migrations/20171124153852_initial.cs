@@ -9,7 +9,7 @@ namespace SamuraiApp.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+          /*  migrationBuilder.CreateTable(
                 name: "Battles",
                 columns: table => new
                 {
@@ -73,11 +73,12 @@ namespace SamuraiApp.Data.Migrations
                 name: "IX_Samurais_BattleId",
                 table: "Samurais",
                 column: "BattleId");
+                */
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            /*migrationBuilder.DropTable(
                 name: "Quotes");
 
             migrationBuilder.DropTable(
@@ -85,6 +86,7 @@ namespace SamuraiApp.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Battles");
+                */
         }
     }
 }

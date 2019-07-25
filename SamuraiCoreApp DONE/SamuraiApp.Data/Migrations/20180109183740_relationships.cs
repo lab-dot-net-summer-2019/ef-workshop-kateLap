@@ -9,7 +9,7 @@ namespace SamuraiApp.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
+            /*migrationBuilder.DropForeignKey(
                 name: "FK_Samurais_Battles_BattleId",
                 table: "Samurais");
 
@@ -75,10 +75,12 @@ namespace SamuraiApp.Data.Migrations
                 table: "SecretIdentity",
                 column: "SamuraiId",
                 unique: true);
+                */
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            /*
             migrationBuilder.DropTable(
                 name: "SamuraiBattle");
 
@@ -103,6 +105,7 @@ namespace SamuraiApp.Data.Migrations
                 principalTable: "Battles",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+                */
         }
     }
 }
